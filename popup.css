@@ -1,13 +1,68 @@
 /* popup.css */
 body {
-    font-family: Arial, sans-serif;
-    margin: 10px;
-  }
-  
-  .series-row {
-    margin-bottom: 10px;
-  }
-  
-  button {
-    margin-left: 5px;
-  }
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 20px;
+    background-color: #f7f7f7;
+    color: #333;
+}
+
+/* popup.css */
+.container {
+    width: 400px; /* Adjust this value based on your preference */
+    margin: 0 auto;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+    background-color: #3498db;
+    color: white;
+}
+
+h1 {
+    margin: 0;
+}
+
+#series-list {
+    margin-top: 20px;
+    display: flex;
+    box-sizing: border-box; /* Ensure padding is included in width */
+    width: 100%; /* Occupy the full width */
+    flex-direction: column;
+}
+
+.series-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;   
+}
+
+.series-info {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.series-link {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+button {
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #297fb8;
+}
