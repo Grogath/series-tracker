@@ -3,17 +3,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const seriesListDiv = document.getElementById('series-list');
     const addButton = document.getElementById('add-button');
   
-    // Sample data (replace this with your data retrieval logic)
-    const seriesData = [
-      { name: 'Series 1', link: 'https://example.com/series1' },
-      { name: 'Series 2', link: 'https://example.com/series2' }
-      // Add more series data as needed
-    ];
-  
     // Function to create a new series entry
     function createSeriesRow(series) {
       const row = document.createElement('div');
       row.classList.add('series-row');
+  
+      const seriesInfo = document.createElement('div');
+      seriesInfo.classList.add('series-info');
   
       const name = document.createElement('span');
       name.textContent = series.name;
@@ -21,6 +17,10 @@ document.addEventListener('DOMContentLoaded', function() {
       const link = document.createElement('a');
       link.href = series.link;
       link.textContent = 'Visit';
+      link.classList.add('series-link');
+  
+      seriesInfo.appendChild(name);
+      seriesInfo.appendChild(link);
   
       const editButton = document.createElement('button');
       editButton.textContent = 'Edit';
@@ -34,10 +34,11 @@ document.addEventListener('DOMContentLoaded', function() {
       deleteButton.addEventListener('click', () => {
         // Handle delete button click
         console.log('Delete clicked for ' + series.name);
+        // Remove the series from the data and storage
+        removeSeries(series);
       });
   
-      row.appendChild(name);
-      row.appendChild(link);
+      row.appendChild(seriesInfo);
       row.appendChild(editButton);
       row.appendChild(deleteButton);
   
@@ -45,12 +46,34 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   
     // Function to render the series list
-    function renderSeriesList() {
+    function renderSeriesList(seriesData) {
       seriesListDiv.innerHTML = ''; // Clear existing entries
   
       seriesData.forEach(series => {
         const row = createSeriesRow(series);
         seriesListDiv.appendChild(row);
+      });
+    }
+  
+    // Function to save series data to storage
+    function saveSeriesData(seriesData) {
+      chrome.storage.sync.set({ seriesData: seriesData });
+    }
+  
+    // Function to retrieve series data from storage
+    function getSeriesData(callback) {
+      chrome.storage.sync.get(['seriesData'], function(result) {
+        const seriesData = result.seriesData || [];
+        callback(seriesData);
+      });
+    }
+  
+    // Function to remove a series from data and storage
+    function removeSeries(seriesToRemove) {
+      getSeriesData(function(seriesData) {
+        const updatedSeriesData = seriesData.filter(series => series !== seriesToRemove);
+        saveSeriesData(updatedSeriesData);
+        renderSeriesList(updatedSeriesData);
       });
     }
   
@@ -62,14 +85,15 @@ document.addEventListener('DOMContentLoaded', function() {
         link: 'https://example.com/newseries'
       };
   
-      // Add the new series to the data
-      seriesData.push(newSeries);
-  
-      // Render the updated series list
-      renderSeriesList();
+      // Add the new series to the data and storage
+      getSeriesData(function(seriesData) {
+        seriesData.push(newSeries);
+        saveSeriesData(seriesData);
+        renderSeriesList(seriesData);
+      });
     });
   
     // Initial render
-    renderSeriesList();
+    getSeriesData(renderSeriesList);
   });
   
